@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Chi tiêu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content container">
+            <h1>Quản lý Chi tiêu</h1>
+            <p>Quản lý tài chính cá nhân hiệu quả</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Tổng Danh mục</h3>
+                <p id="total-categories">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Tổng Chi tiêu</h3>
+                <p id="total-expenses">0đ</p>
+            </div>
+            <div class="stat-card">
+                <h3>Danh mục Nhiều nhất</h3>
+                <p id="top-category">-</p>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="categories">Danh mục</button>
+            <button class="tab-btn" data-tab="expenses">Chi tiêu</button>
+        </div>
+
+        <div class="tab-content active" id="categories-tab">
+            <div class="dashboard">
+                <div class="form-section">
+                    <h2 class="section-title">Thêm Danh mục Mới</h2>
+                    <form id="category-form">
+                        <input type="hidden" id="category-id">
+                        <div class="form-group">
+                            <label for="category-name">Tên Danh mục</label>
+                            <input type="text" id="category-name" placeholder="Ví dụ: Ăn uống, Đi lại..." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="category-desc">Mô tả</label>
+                            <textarea id="category-desc" rows="3" placeholder="Mô tả danh mục chi tiêu"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="category-limit">Hạn mức (VND)</label>
+                            <input type="number" id="category-limit" placeholder="Nhập hạn mức chi tiêu" min="0">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn" id="save-category-btn">Lưu Danh mục</button>
+                            <button type="button" class="btn btn-danger hidden" id="cancel-edit-btn">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="category-list">
+                    <h2 class="section-title">Danh sách Danh mục</h2>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tên</th>
+                                    <th>Mô tả</th>
+                                    <th>Hạn mức</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="category-table-body">
+                                <!-- Categories will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="empty-state" id="no-categories">
+                        <p>Chưa có danh mục nào. Hãy thêm danh mục mới!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="expenses-tab">
+            <div class="dashboard">
+                <div class="form-section">
+                    <h2 class="section-title">Thêm Chi tiêu Mới</h2>
+                    <form id="expense-form">
+                        <input type="hidden" id="expense-id">
+                        <div class="form-group">
+                            <label for="expense-name">Tên Chi tiêu</label>
+                            <input type="text" id="expense-name" placeholder="Ví dụ: Ăn trưa, Xăng xe..." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="expense-amount">Số tiền (VND)</label>
+                            <input type="number" id="expense-amount" placeholder="Nhập số tiền" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="expense-category">Danh mục</label>
+                            <select id="expense-category" required>
+                                <option value="">-- Chọn danh mục --</option>
+                                <!-- Categories will be inserted here -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="expense-date">Ngày chi tiêu</label>
+                            <input type="date" id="expense-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="expense-note">Ghi chú</label>
+                            <textarea id="expense-note" rows="3" placeholder="Ghi chú về khoản chi tiêu"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn" id="save-expense-btn">Lưu Chi tiêu</button>
+                            <button type="button" class="btn btn-danger hidden" id="cancel-expense-edit-btn">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="expense-list">
+                    <h2 class="section-title">Danh sách Chi tiêu</h2>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tên</th>
+                                    <th>Số tiền</th>
+                                    <th>Danh mục</th>
+                                    <th>Ngày</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expense-table-body">
+                                <!-- Expenses will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="empty-state" id="no-expenses">
+                        <p>Chưa có khoản chi tiêu nào. Hãy thêm chi tiêu mới!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
