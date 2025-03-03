@@ -22,24 +22,68 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("top-category").textContent = topCategory ? topCategory[0] : "-";
     }
 
-    function renderCategories() {
+    // function renderCategories() {
+    //     const tbody = document.getElementById("category-table-body");
+    //     tbody.innerHTML = "";
+    //     categories.forEach((cat, index) => {
+    //         const tr = document.createElement("tr");
+    //         tr.innerHTML = `
+    //             <td>${cat.name}</td>
+    //             <td>${cat.desc || "-"}</td>
+    //             <td>${cat.limit ? cat.limit.toLocaleString() + "đ" : "-"}</td>
+    //             <td>
+    //                 <button class="edit-btn" onclick="editCategory(${index})">✏️</button>
+    //                 <button class="delete-btn" onclick="deleteCategory(${index})">🗑️</button>
+    //             </td>
+    //         `;
+    //         tbody.appendChild(tr);
+    //     });
+
+    //     document.getElementById("no-categories").style.display = categories.length ? "none" : "block";
+    //     updateCategoryOptions();
+    //     updateStats();
+    // }
+
+    function renderCategories(searchTerm = "", filterLimit = "") {
         const tbody = document.getElementById("category-table-body");
         tbody.innerHTML = "";
-        categories.forEach((cat, index) => {
+    
+        // Lọc danh mục theo từ khóa tìm kiếm và hạn mức
+        let filteredCategories = categories.filter(cat => {
+            const matchesSearch = cat.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                 (cat.desc && cat.desc.toLowerCase().includes(searchTerm.toLowerCase()));
+            let matchesLimit = true;
+    
+            if (filterLimit === "no-limit") {
+                matchesLimit = !cat.limit || cat.limit === 0;
+            } else if (filterLimit === "below-500000") {
+                matchesLimit = cat.limit > 0 && cat.limit < 500000;
+            } else if (filterLimit === "500000-1000000") {
+                matchesLimit = cat.limit >= 500000 && cat.limit < 1000000;
+            } else if (filterLimit === "1000000-5000000") {
+                matchesLimit = cat.limit >= 1000000 && cat.limit <= 5000000;
+            } else if (filterLimit === "above-5000000") {
+                matchesLimit = cat.limit > 5000000;
+            }
+    
+            return matchesSearch && matchesLimit;
+        });
+    
+        filteredCategories.forEach((cat, index) => {
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td>${cat.name}</td>
                 <td>${cat.desc || "-"}</td>
                 <td>${cat.limit ? cat.limit.toLocaleString() + "đ" : "-"}</td>
                 <td>
-                    <button class="edit-btn" onclick="editCategory(${index})">✏️</button>
-                    <button class="delete-btn" onclick="deleteCategory(${index})">🗑️</button>
+                    <button class="edit-btn" onclick="editCategory(${categories.indexOf(cat)})">✏️</button>
+                    <button class="delete-btn" onclick="deleteCategory(${categories.indexOf(cat)})">🗑️</button>
                 </td>
             `;
             tbody.appendChild(tr);
         });
-
-        document.getElementById("no-categories").style.display = categories.length ? "none" : "block";
+    
+        document.getElementById("no-categories").style.display = filteredCategories.length ? "none" : "block";
         updateCategoryOptions();
         updateStats();
     }
@@ -76,6 +120,20 @@ document.addEventListener("DOMContentLoaded", function () {
             select.appendChild(option);
         });
     }
+
+    // Sự kiện tìm kiếm danh mục
+    document.getElementById("search-category").addEventListener("input", function () {
+        const searchTerm = this.value;
+        const filterLimit = document.getElementById("filter-category-limit").value;
+        renderCategories(searchTerm, filterLimit);
+    });
+
+    // Sự kiện lọc danh mục theo hạn mức
+    document.getElementById("filter-category-limit").addEventListener("change", function () {
+        const filterLimit = this.value;
+        const searchTerm = document.getElementById("search-category").value;
+        renderCategories(searchTerm, filterLimit);
+    });
 
     document.getElementById("category-form").addEventListener("submit", function (e) {
         e.preventDefault();
