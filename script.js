@@ -82,6 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>${cat.name}</td>
                 <td>${cat.desc || "-"}</td>
                 <td>${cat.limit ? cat.limit.toLocaleString() + "đ" : "-"}</td>
+                <td>${cat.budget ? cat.budget.toLocaleString() + "đ" : "-"}</td>
                 <td>
                     <button class="edit-btn" onclick="editCategory(${categories.indexOf(
                       cat
@@ -131,6 +132,15 @@ document.addEventListener("DOMContentLoaded", function () {
       return matchesCategory && matchesTime;
     });
 
+
+    document.getElementById("category-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const id = document.getElementById("category-id").value;
+        const name = document.getElementById("category-name").value.trim();
+        const desc = document.getElementById("category-desc").value.trim();
+        const limit = parseFloat(document.getElementById("category-limit").value) || 0;
+        const budget = parseFloat(document.getElementById("category-budget").value) || 0;
+
     window.viewExpense = function (index) {
       const exp = expenses[index];
       document.getElementById("detail-name").textContent = exp.name;
@@ -139,6 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("detail-category").textContent = exp.category;
       document.getElementById("detail-date").textContent = exp.date;
       document.getElementById("detail-note").textContent = exp.note || "-";
+
 
       const modal = document.getElementById("expense-detail-modal");
       modal.style.display = "flex";
@@ -209,6 +220,17 @@ document.addEventListener("DOMContentLoaded", function () {
       renderExpenses(categoryFilter, timeFilter);
     });
 
+
+    window.editCategory = function (index) {
+        const cat = categories[index];
+        document.getElementById("category-id").value = index;
+        document.getElementById("category-name").value = cat.name;
+        document.getElementById("category-desc").value = cat.desc;
+        document.getElementById("category-limit").value = cat.limit;
+        document.getElementById("category-budget").value = cat.budget;
+        document.getElementById("cancel-edit-btn").classList.remove("hidden");
+    };
+
   function updateCategoryOptions() {
     const select = document.getElementById("expense-category");
     select.innerHTML = '<option value="">-- Chọn danh mục --</option>';
@@ -219,6 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
       select.appendChild(option);
     });
   }
+
 
   // Sự kiện tìm kiếm danh mục
   document
