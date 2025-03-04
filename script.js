@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>${cat.name}</td>
                 <td>${cat.desc || "-"}</td>
                 <td>${cat.limit ? cat.limit.toLocaleString() + "đ" : "-"}</td>
+                <td>${cat.budget ? cat.budget.toLocaleString() + "đ" : "-"}</td>
                 <td>
                     <button class="edit-btn" onclick="editCategory(${categories.indexOf(cat)})">✏️</button>
                     <button class="delete-btn" onclick="deleteCategory(${categories.indexOf(cat)})">🗑️</button>
@@ -141,6 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const name = document.getElementById("category-name").value.trim();
         const desc = document.getElementById("category-desc").value.trim();
         const limit = parseFloat(document.getElementById("category-limit").value) || 0;
+        const budget = parseFloat(document.getElementById("category-budget").value) || 0;
 
         if (!name) {
             alert("Tên danh mục không được để trống!");
@@ -191,6 +193,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("category-name").value = cat.name;
         document.getElementById("category-desc").value = cat.desc;
         document.getElementById("category-limit").value = cat.limit;
+        document.getElementById("category-budget").value = cat.budget;
         document.getElementById("cancel-edit-btn").classList.remove("hidden");
     };
 
