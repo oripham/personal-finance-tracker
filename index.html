@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý Chi tiêu</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -33,6 +35,8 @@
         <div class="tabs">
             <button class="tab-btn active" data-tab="categories">Danh mục</button>
             <button class="tab-btn" data-tab="expenses">Chi tiêu</button>
+            <button class="tab-btn statistical" data-tab="statistical">Thống kê </button>
+            <button class="tab-btn equal" data-tab="equal">So sánh chi tiêu </button>
         </div>
 
         <div class="tab-content active" id="categories-tab">
@@ -69,9 +73,11 @@
 
                     <div class="search-filter">
                         <div class="form-group">
+                            <label for="filter-category-limit">Tìm kiếm:</label>
                             <input type="text" id="search-category" placeholder="Tìm kiếm danh mục...">
                         </div>
                         <div class="form-group">
+                            <label for="filter-category-limit">Chọn mức giá:</label>
                             <select id="filter-category-limit">
                                 <option value="">-- Lọc theo hạn mức --</option>
                                 <option value="no-limit">Không có hạn mức</option>
@@ -144,6 +150,27 @@
                 
                 <div class="expense-list">
                     <h2 class="section-title">Danh sách Chi tiêu</h2>
+                    
+                    <div class="search-filter">
+                        <div class="form-group">
+                            <label for="filter-expense-category">Danh mục:</label>
+                            <select id="filter-expense-category">
+                                <option value="">Tất cả danh mục</option>
+                                <!-- Categories will be populated here -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filter-expense-time">Thời gian:</label>
+                            <select id="filter-expense-time">
+                                <option value="">Tất cả thời gian</option>
+                                <option value="today">Hôm nay</option>
+                                <option value="week">Tuần này</option>
+                                <option value="month">Tháng này</option>
+                                <option value="year">Năm nay</option>
+                            </select>
+                        </div>
+                    </div>
+                
                     <div class="table-responsive">
                         <table>
                             <thead>
@@ -156,7 +183,7 @@
                                 </tr>
                             </thead>
                             <tbody id="expense-table-body">
-                                <!-- Expenses will be inserted here -->
+                                <!-- Expenses will be inserted here dynamically with the View button -->
                             </tbody>
                         </table>
                     </div>
@@ -165,8 +192,93 @@
                     </div>
                 </div>
             </div>
+        
+            <!-- Add Modal Inside expenses-tab -->
+            <div class="modal" id="expense-detail-modal">
+                <div class="modal-content">
+                    <span class="close-modal" id="close-modal">×</span>
+                    <h2>Chi tiết Chi tiêu</h2>
+                    <div class="expense-details">
+                        <p><strong>Tên:</strong> <span id="detail-name"></span></p>
+                        <p><strong>Số tiền:</strong> <span id="detail-amount"></span></p>
+                        <p><strong>Danh mục:</strong> <span id="detail-category"></span></p>
+                        <p><strong>Ngày:</strong> <span id="detail-date"></span></p>
+                        <p><strong>Ghi chú:</strong> <span id="detail-note"></span></p>
+                    </div>
+                </div>
+            </div>
         </div>
+
+
+
+        <div class="tab-content", id = "statistical-tab">
+            <div class="chart-container">
+                <h2 class="section-title">Biểu đồ Chi tiêu</h2>
+            
+                <div class="form-group">
+                    <label for="chart-select">Chọn loại thống kê:</label>
+                    <select id="chart-select">
+                        <option value="all">Tất cả</option>
+                        <option value="category-chart">Chi tiêu theo Danh mục</option>
+                        <option value="daily-chart">Chi tiêu theo Ngày</option>
+                        <option value="limit-chart">So sánh Hạn mức và Chi tiêu</option>
+                        <option value="trend-chart">Xu hướng Chi tiêu</option>
+                    </select>
+                </div>
+            
+                <div class="charts-grid">
+                    <div class="chart-card" id="category-chart-card">
+                        <h3>Chi tiêu theo Danh mục</h3>
+                        <canvas id="category-chart"></canvas>
+                    </div>
+            
+                    <div class="chart-card" id="daily-chart-card">
+                        <h3>Chi tiêu theo Ngày</h3>
+                        <canvas id="daily-chart"></canvas>
+                    </div>
+            
+                    <div class="chart-card" id="limit-chart-card">
+                        <h3>So sánh Hạn mức và Chi tiêu</h3>
+                        <canvas id="limit-chart"></canvas>
+                    </div>
+            
+                    <div class="chart-card" id="trend-chart-card">
+                        <h3>Xu hướng Chi tiêu</h3>
+                        <canvas id="trend-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="tab-content" id="equal-tab">
+            <div class="dashboard">
+                <h2 class="section-title">So sánh Chi tiêu theo Thời gian</h2>
+                
+                <div class="form-group">
+                    <label for="compare-category">Chọn danh mục:</label>
+                    <select id="compare-category">
+                        <option value="">-- Chọn danh mục --</option>
+                    </select>
+                </div>
+        
+                <div class="form-group">
+                    <label for="time-mode">Chọn chế độ xem:</label>
+                    <select id="time-mode">
+                        <option value="daily">Theo Ngày</option>
+                        <option value="monthly">Theo Tháng</option>
+                    </select>
+                </div>
+        
+                <div class="chart-card">
+                    <h3>So sánh Chi tiêu theo Thời gian</h3>
+                    <canvas id="time-comparison-chart"></canvas>
+                </div>
+            </div>
+        </div>
+        
     </div>
+   
+</div>
 
     <script src="script.js"></script>
 </body>
